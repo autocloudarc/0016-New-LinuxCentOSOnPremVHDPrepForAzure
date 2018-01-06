@@ -1,8 +1,8 @@
 ## DESCRIPTION
-This script prepares an On-Prem Linux CentOS 7 VM to be used as a custom image in Azure. Details for the manual process are available in the reference below.
+This script prepares an On-Prem Linux CentOS 7.2 VM to be used as a custom image in Azure. Details for the manual process are available in the reference below.
 
 EXAMPLE 1
-bash New-AzureRmLinuxCentOSOnPremImage.sh
+bash New-AzureRmLinuxCentOSOnPremVHDPrepForAzure.sh
 
 REFERENCE
 https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-upload-centos
