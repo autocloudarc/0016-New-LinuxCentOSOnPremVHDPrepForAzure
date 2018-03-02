@@ -111,6 +111,9 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 EOF
 
+# Cache packages
+echo "http_caching=packages" >> /etc/yum.conf
+
 # Clear yum metadata 
 sudo yum clean all
 # Free up space taken by orphaned data from disabled or removed repos (-rf = recursive, force)
@@ -118,9 +121,9 @@ sudo rm -rf /var/cache/yum
 # Update packages
 sudo yum -y update
 
-# Modify yum config echo "http_caching=packages" >> /etc/yum.conf
-echo "exclude=kernel*" >> /etc/yum.conf
-sed -i.bak 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
+# https://access.redhat.com/solutions/10185
+# echo "exclude=kernel*" >> /etc/yum.conf
+# sed -i.bak 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 yum --disableexcludes=all install kernel -y
 } ##end yum changes
 
@@ -140,12 +143,14 @@ function updateKernelBootLine ()
 
 function installAzureLinuxAgent ()
 {
-    # Install Agent
+    # Install Azure Linux Agent and dependencies
     sudo yum -y install python-pyasn1 WALinuxAgent
     # Enable Agent
     sudo systemctl enable waagent
     # yum install WALinuxAgent -y
     # Format resource disk
+    sed -i.bak4 's/ResourceDisk.Format=n/ResourceDisk.Format=y/' $waaCfg
+    # Enable swap space on resource disk
     sed -i.bak4 's/ResourceDisk.EnableSwap=n/ResourceDisk.EnableSwap=y/' $waaCfg
     # Set swap size for resource disk
     sed -i.bak5 's/ResourceDisk.SwapSizeMB=0/ResourceDisk.SwapSizeMB=8192/' $waaCfg
@@ -157,7 +162,7 @@ function installAzureLinuxAgent ()
 
 function deprovisionVM
 {
-    #this will make sure that any iptables rules added do not get in the way of the setup process.
+    # This will make sure that any iptables rules added do not get in the way of the setup process.
     chkconfig iptables off
     sudo waagent -force -deprovision
     export HISTSIZE=0
