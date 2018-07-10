@@ -7,7 +7,7 @@
 # OUTPUTS:      A *.vhd, fixed disk, generation 1 VM file that can be uploaded to an Azure storage blob container to be deployed as a specialized VM using managed disk.
 # REQUIREMENTS: See references.
 # AUTHOR:       Preston K. Parsard
-# REFERENCES: 
+# REFERENCES:
 #   http://www.scalearc.com/blog/2014/4/12/how-to-prepare-centos-rhel-environments-for-azure
 #   https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-upload-centos?toc=%2Fazure%2Fvirtual-machines%2Flinux%2Ftoc.json#centos-70
 
@@ -20,7 +20,7 @@ waaLib="/var/lib/waagent"
 # udev rules
 netGenRulesCfg="/etc/udev/rules.d/75-persistent-net-generator.rules"
 netGenRulesLib="/lib/udev/rules.d/75-persistent-net-generator.rules"
-# 
+#
 grubConfig="/boot/grub2/grub.cfg"
 
 # Create an associative array for the various configuration files
@@ -114,10 +114,10 @@ EOF
 # Cache packages
 echo "http_caching=packages" >> /etc/yum.conf
 
-# Clear yum metadata 
+# Clear yum metadata
 sudo yum clean all
 # Free up space taken by orphaned data from disabled or removed repos (-rf = recursive, force)
-sudo rm -rf /var/cache/yum
+sudo rm -rf /var/cache/yum/*
 # Update packages
 sudo yum -y update
 
